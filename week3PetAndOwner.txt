@@ -1,0 +1,49 @@
+Step 1.
+Create the table for owner.
+CREATE TABLE owner (
+firstName varchar(255),
+lastName varchar(255),
+address varchar(255),
+ownerID int PRIMARY KEY AUTO_INCREMENT NOT NULL
+);
+Step 2.
+Drop previous owner which could have dublicates.
+ALTER TABLE pet DROP COLUMN owner;
+Step 3.
+Add a new field to pet that will be the unique key for every pet
+ALTER TABLE pet ADD COLUMN petID INT PRIMARY KEY AUTO_INCREMENT;
+Step 4.
+Add new column which we will use to reference the other table owner;
+ALTER TABLE pet ADD COLUMN ownerID INT;
+Step 5.
+We modify the ownerID to have the reference
+ALTER TABLE pet ADD CONSTRAINT FOREIGN KEY(ownerID) REFERENCES owner(ownerID);
+Step 6.
+Add some owners.
+INSERT INTO owner VALUES('Harold', 'Lloyd', 'Address 1', NULL);
+Step 7.
+Next we connect the pets to owners.
+UPDATE pet SET ownerID=1 WHERE petID=1;
+Step 8.
+Describe taken from both tables.
++-----------+--------------+------+-----+---------+----------------+
+| Field     | Type         | Null | Key | Default | Extra          |
++-----------+--------------+------+-----+---------+----------------+
+| firstName | varchar(255) | YES  |     | NULL    |                |
+| lastName  | varchar(255) | YES  |     | NULL    |                |
+| address   | varchar(255) | YES  |     | NULL    |                |
+| ownerID   | int          | NO   | PRI | NULL    | auto_increment |
++-----------+--------------+------+-----+---------+----------------+
+
++---------+-------------+------+-----+---------+----------------+
+| Field   | Type        | Null | Key | Default | Extra          |
++---------+-------------+------+-----+---------+----------------+
+| name    | varchar(20) | YES  |     | NULL    |                |
+| species | varchar(20) | YES  |     | NULL    |                |
+| sex     | char(1)     | YES  |     | NULL    |                |
+| birth   | date        | YES  |     | NULL    |                |
+| death   | date        | YES  |     | NULL    |                |
+| petID   | int         | NO   | PRI | NULL    | auto_increment |
+| ownerID | int         | YES  | MUL | NULL    |                |
++---------+-------------+------+-----+---------+----------------+
+

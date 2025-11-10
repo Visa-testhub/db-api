@@ -1,0 +1,7 @@
+a) SELECT DISTINCT dept_name FROM departments;
+b) SELECT DISTINCT title FROM titles;
+c) SELECT MIN(salary) AS 'alin palkka', MAX(salary) AS 'korkein palkka' FROM salaries;
+d) SELECT AVG(salary) as 'keskiverto palkka' From salaries;
+e) Select COUNT(last_name) FROM employees WHERE last_name='Facello' COLLATE utf8mb4_sv_0900_as_cs;
+f) SELECT COUNT(birth_date) AS 'fiftarit' FROM employees WHERE birth_date LIKE '195%';
+g) SELECT SUM(gender='M') AS Miehet, SUM(gender='F') AS Naiset FROM employees;
