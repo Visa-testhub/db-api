@@ -1,0 +1,52 @@
+QUESTIONS:
+a) Tulosta kymmenen aakkosjärjestyksessä ensimmäisen työntekijän tiedot sukunimen mukaan lajiteltuna. Vihje: LIMIT rajoittaa tulostettavien tietojen määrän.
+b) Sama kuten edellä, mutta sukunimen JA etunimen mukaan lajiteltuna.
+c) Tulosta viiden viimeksi palkatun työntekijän tiedot.
+Seuraavissa tehtävissä tarvitaan tietoja useammasta kuin yhdestä taulusta (JOIN).
+d) Kenellä on suurin palkka ? Tulosta etunimi, sukunimi ja palkka.
+e) Kenellä on pienin palkka ? Tulosta etunimi, sukunimi ja palkka.
+f) Tulosta työntekijät (etunimi, sukunimi, palkka), jotka ansaitsevat yli 150000. 
+g) Kuinka monta työntekijää työskentelee myynnissä (Sales) ? Entä markkinoinnissa (Marketing) ?
+h) Tulosta kaikkien osastonjohtajien (Department Managers) etunimi, sukunimi ja osasto, jolla työskentelee.
+i) Mikä on myynnissä työskentelevien keskipalkka ? Entä markkinoinnissa ?
+
+ANSWERS:
+a)	SELECT * FROM employees ORDER BY last_name LIMIT 10;
+b)	SELECT * FROM employees ORDER BY last_name, first_name LIMIT 10;
+c)	SELECT * FROM employees ORDER BY hire_date DESC LIMIT 5;
+d)	SELECT e.first_name, e.last_name, s.salary 
+	FROM employees e 
+	JOIN salaries s ON e.emp_no = s.emp_no 
+	WHERE s.to_date = '9999-01-01' 
+	ORDER BY s.salary DESC 
+	LIMIT 1;
+Question implies that we are looking for current salary so I included the max date 
+e)	SELECT e.first_name, e.last_name, s.salary 
+	FROM employees e 
+	JOIN salaries s ON e.emp_no = s.emp_no 
+	WHERE s.to_date = '9999-01-01'
+	ORDER BY s.salary ASC 
+	LIMIT 1;
+f)	SELECT e.first_name, e.last_name, s.salary 
+	FROM employees e 
+	JOIN salaries s ON e.emp_no = s.emp_no 
+	WHERE s.to_date = '9999-01-01' AND s.salary>150000 
+	ORDER BY s.salary DESC;
+g)	SELECT dept.dept_name AS Osasto, COUNT(*) AS lkm 
+	FROM employees e 
+	JOIN dept_emp d ON e.emp_no = d.emp_no 
+	JOIN departments dept ON d.dept_no = dept.dept_no 
+	WHERE d.to_date = '9999-01-01' AND (dept.dept_name = 'Sales' OR dept.dept_name = 'Marketing') 
+	GROUP BY dept.dept_name;
+h)	SELECT e.first_name, e.last_name, d.dept_name 
+	FROM dept_manager dm 
+	JOIN employees e ON e.emp_no = dm.emp_no 
+	JOIN departments d ON dm.dept_no = d.dept_no;
+i)	SELECT AVG(salary) AS keskipalkka, d.dept_name AS osasto 
+	FROM salaries s 
+	JOIN employees e ON e.emp_no=s.emp_no 
+	JOIN dept_emp de ON e.emp_no=de.emp_no 
+	JOIN departments d ON d.dept_no= de.dept_no 
+	WHERE s.to_date='9999-01-01' 
+	AND (d.dept_name='Sales' OR d.dept_name='Marketing') 
+	GROUP BY d.dept_name;
