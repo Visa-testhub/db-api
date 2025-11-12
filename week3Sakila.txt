@@ -1,0 +1,20 @@
+a)	SELECT name FROM language ORDER BY name;
+b)	SELECT f.title AS leffa FROM film f 
+	JOIN film_actor fa ON f.film_id=fa.film_id 
+	JOIN actor a ON a.actor_id=fa.actor_id 
+	WHERE a.last_name='Temple';
+c)	SELECT f.title AS leffa, a.last_name AS sukunimi, a.first_name AS etunimi 
+	FROM film f 
+	JOIN film_actor fa ON f.film_id=fa.film_id 
+	JOIN actor a ON a.actor_id=fa.actor_id 
+	WHERE f.title='ghost groundhog';
+d)	SELECT COUNT(DISTINCT f.title) AS lkm 
+	FROM film f 
+	JOIN film_category fc ON fc.film_id=f.film_id 
+	JOIN category c ON c.category_id=fc.category_id 
+	WHERE c.name='horror';
+e)	SELECT f.title AS leffa 
+	FROM film f 
+	JOIN film_category fc ON fc.film_id=f.film_id 
+	JOIN category c ON c.category_id=fc.category_id 
+	WHERE c.name='horror';
