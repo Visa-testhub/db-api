@@ -1,0 +1,61 @@
+The goal is to have datatables for Opiskelija, Arviointi and Opintojakso. 
+They should be connected with primary ID int which would be nice to be running auto incrementing integer.
+So lets start by creating a database to hold these tables.
+	CREATE DATABASE opintoDB;
+Then we create table for Opiskelija
+	CREATE TABLE Opiskelija(
+	OpiskelijaID int UNSIGNED NOT NULL AUTO_INCREMENT,
+	Etunimi VARCHAR(45),
+	Sukunimi VARCHAR(45),
+	Osoite VARCHAR(45),
+	Luokkatunnus VARCHAR(45),
+	PRIMARY KEY (OpiskelijaID));
+Next up table for opintojakso
+	CREATE TABLE IF NOT EXISTs Opintojakso (
+	OpintojaksoID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	koodi VARCHAR(45),
+	Laajuus TINYINT,
+	Nimi VARCHAR(45),
+	PRIMARY KEY (OpintojaksoID));
+Next up for Arviointi
+CREATE TABLE IF NOT EXISTS Arviointi (
+	ArviointiID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	Paivamaara DATE,
+	Arvosana TINYINT,
+	OpiskelijaID INT UNSIGNED NOT NULL,
+	OpintojaksoID INT UNSIGNED NOT NULL,
+	PRIMARY KEY (ArviointiID),
+	FOREIGN KEY (OpiskelijaID) REFERENCES Opiskelija(OpiskelijaID) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (OpintojaksoID) REFERENCES Opintojakso(OpintojaksoID) ON DELETE CASCADE ON UPDATE CASCADE);
+
+Now to insert info to tables I created one procedure for adding courses.
+The reason you are seeing two ;; at the end is I changed the delimiter with the DELIMITER ;; command. 
+That way you can have ; inside the procedure.
+	CREATE PROCEDURE addCourse(IN K VARCHAR(45), IN L INT, IN N VARCHAR(45))
+	BEGIN
+		INSERT INTO Opintojakso VALUES(NULL,K,L,N);
+	END;;
+Added few courses with that with
+	CALL addCourse('koodi', 3, 'kurssinimi');
+
+Then added another procedure
+	CREATE PROCEDURE addStudent(
+	IN EN VARCHAR(45),
+	 IN SN VARCHAR(45),
+	 IN Addr VARCHAR(45),
+	 IN LT VARCHAR(45))
+	BEGIN 
+		INSERT INTO Opiskelija VALUES(NULL, EN, SN, Addr, LT); 
+	END;;
+Remeber to set the delimiter back to original with
+	DELIMITER ;
+
+You can view your procedures with
+	SHOW PROCEDURE STATUS WHERE db='opintoDB';
+or
+	SHOW PROCEDURE STATUS WHERE db=;
+Then add few lines with
+CALL addStudent('Jussi', 'Jokinen', 'Jokisentie 49', 'TVT25KMO');
+
+
+
