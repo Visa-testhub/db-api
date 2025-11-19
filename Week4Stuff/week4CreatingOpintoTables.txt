@@ -53,9 +53,26 @@ Remeber to set the delimiter back to original with
 You can view your procedures with
 	SHOW PROCEDURE STATUS WHERE db='opintoDB';
 or
-	SHOW PROCEDURE STATUS WHERE db=;
+	SHOW PROCEDURE STATUS WHERE db=DATABASE();
+
 Then add few lines with
 CALL addStudent('Jussi', 'Jokinen', 'Jokisentie 49', 'TVT25KMO');
 
+One more procedure for creating evaluations.
+	CREATE PROCEDURE AddEvaluation(
+	IN D DATE,
+	IN V TINYINT,
+	IN OI INT UNSIGNED,
+	IN OJI INT UNSIGNED)
+	BEGIN
+		INSERT INTO Arviointi VALUES(NULL, D, V, OI, OJI);
+	END;;
 
+Now we can add some Arviointis with
+CALL AddEvaluation('1998-01-02', 1, 1);
 
+This lets you JOIN the tables to see all.
+	SELECT etunimi, sukunimi, arvosana, paivamaara, nimi
+	FROM Arviointi a
+	JOIN Opiskelija o ON o.opiskelijaID = A.opiskelijaID 
+	JOIN Opintojakso oj ON oj.OpintojaksoID = a.OpintojaksoID;
