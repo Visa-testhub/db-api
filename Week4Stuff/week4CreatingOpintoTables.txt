@@ -69,7 +69,8 @@ One more procedure for creating evaluations.
 	END;;
 
 Now we can add some Arviointis with
-CALL AddEvaluation('1998-01-02', 1, 1);
+	CALL AddEvaluation('1998-01-02', 1, 1, 1);
+
 
 This lets you JOIN the tables to see all.
 	SELECT etunimi, sukunimi, arvosana, paivamaara, nimi

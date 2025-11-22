@@ -1,0 +1,12 @@
+1)	SELECT Etunimi, Sukunimi, arvosana, paivamaara, nimi
+	FROM Arviointi a
+	JOIN Opiskelija o on o.OpiskelijaID = a.OpiskelijaID
+	JOIN Opintojakso oj on oj.OpintojaksoID = a.OpintojaksoID
+	WHERE a.arvosana=0;
+	+---------+------------+----------+------------+-------------+
+	| Etunimi | Sukunimi   | arvosana | paivamaara | nimi        |
+	+---------+------------+----------+------------+-------------+
+	| Jyrki   | Älätyrki   |        0 | 2024-04-05 | Tietokannat |
+	+---------+------------+----------+------------+-------------+
+
+
