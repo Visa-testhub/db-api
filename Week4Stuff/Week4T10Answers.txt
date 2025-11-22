@@ -9,4 +9,83 @@
 	| Jyrki   | Älätyrki   |        0 | 2024-04-05 | Tietokannat |
 	+---------+------------+----------+------------+-------------+
 
+If you want distinct students, there is this one for that
+
+	SELECT DISTINCT o.Etunimi, o.Sukunimi
+	FROM Arviointi a 
+	JOIN Opiskelija o ON o.OpiskelijaID = a.OpiskelijaID
+	WHERE a.Arvosana = 0;
+	+---------+------------+
+	| Etunimi | Sukunimi   |
+	+---------+------------+
+	| Jyrki   | Älätyrki   |
+	| Joonas  | Jyrkkä     |
+	+---------+------------+
+
+
+2)	SELECT Etunimi, Sukunimi, arvosana, paivamaara, nimi
+	FROM Arviointi a
+	JOIN Opiskelija o on o.OpiskelijaID = a.OpiskelijaID
+	JOIN Opintojakso oj on oj.OpintojaksoID = a.OpintojaksoID
+	WHERE oj.nimi='Fysiikka 3' AND a.arvosana>0;
+	+---------+------------+----------+------------+------------+
+	| Etunimi | Sukunimi   | arvosana | paivamaara | nimi       |
+	+---------+------------+----------+------------+------------+
+	| Jyrki   | Älätyrki   |        2 | 2024-04-05 | Fysiikka 3 |
+	+---------+------------+----------+------------+------------+
+
+From multiple students or same students with multiple grades, you could use
+	SELECT DISTINCT o.Etunimi, o.Sukunimi
+	FROM Arviointi a 
+	JOIN Opiskelija o on o.OpiskelijaID = a.OpiskelijaID 
+	JOIN Opintojakso oj on oj.OpintojaksoID = a.OpintojaksoID 
+	WHERE oj.nimi='Fysiikka 3' AND a.arvosana>0;
+	+---------+------------+
+	| Etunimi | Sukunimi   |
+	+---------+------------+
+	| Jyrki   | Älätyrki   |
+	+---------+------------+
+
+
+3)	SELECT Etunimi, Sukunimi, arvosana, paivamaara, nimi
+	FROM Arviointi a
+	JOIN Opiskelija o on o.OpiskelijaID = a.OpiskelijaID
+	JOIN Opintojakso oj on oj.OpintojaksoID = a.OpintojaksoID
+	WHERE o.Etunimi='Hessu';
+	+---------+----------+----------+------------+--------------------------+
+	| Etunimi | Sukunimi | arvosana | paivamaara | nimi                     |
+	+---------+----------+----------+------------+--------------------------+
+	| Hessu   | Hopo     |        1 | 2024-03-05 | Tietokannat              |
+	| Hessu   | Hopo     |        4 | 2024-03-05 | Liike-elaman tapatietous |
+	| Hessu   | Hopo     |        3 | 2024-03-02 | Fysiikka 2               |
+	+---------+----------+----------+------------+--------------------------+
+
+4)	SELECT o.Etunimi, o.Sukunimi, AVG(a.Arvosana) AS keskiarvo
+	FROM Arviointi a 
+	JOIN Opiskelija o on o.OpiskelijaID = a.OpiskelijaID
+	JOIN Opintojakso oj on oj.OpintojaksoID = a.OpintojaksoID
+	WHERE o.Etunimi='Aku'
+	GROUP BY o.OpiskelijaID, o.Etunimi, o.Sukunimi;
+	+---------+----------+-----------+
+	| Etunimi | Sukunimi | keskiarvo |
+	+---------+----------+-----------+
+	| AKU     | Ankka    |    2.8000 |
+	+---------+----------+-----------+
+
+	Since the question didn't ask for any unique Aku, I just used the o.opiskelijaID to separate different Aku's.
+	Also I could have asked for Aku Ankka specifically but as the question only asked for aku, doesn't matter.
+
+5)	SELECT oj.* FROM Opintojakso oj 
+	LEFT JOIN Arviointi a ON oj.OpintojaksoID=a.OpintojaksoID 
+	WHERE a.OpintojaksoID IS NULL;
+	+---------------+--------+---------+----------------+
+	| OpintojaksoID | koodi  | Laajuus | Nimi           |
+	+---------------+--------+---------+----------------+
+	|             7 | T20047 |       3 | Fysiikka 5     |
+	|             8 | T20050 |       3 | Matematiikka 1 |
+	|             9 | T20051 |       3 | Matematiikka 2 |
+	|            12 | T20080 |       3 | Ruotsi 1       |
+	|            13 | T20081 |       3 | Ruotsi 2       |
+	|            14 | T20082 |       5 | Ruotsi 3       |
+	+---------------+--------+---------+----------------+
 
