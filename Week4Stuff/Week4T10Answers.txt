@@ -1,3 +1,8 @@
+Please note that I have used naming convention of putting the ID afther the actual field that represents ID rather than before them.
+This is due to doing the datatables inside mySQL command prompt rather than in the mySQL Workbench. I noticed that the SQL workbench
+automatically adds the ID's at the front of the name. So if you have different names, you can replace those in the commands if you want to test them.
+For that reason I also added the outputs after the commands.
+
 1)	SELECT Etunimi, Sukunimi, arvosana, paivamaara, nimi
 	FROM Arviointi a
 	JOIN Opiskelija o on o.OpiskelijaID = a.OpiskelijaID
