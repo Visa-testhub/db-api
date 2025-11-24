@@ -1,0 +1,27 @@
+Tässä nyt on vähän tulostuksia, mutta lyhyitä niin näkee mitä haut tuottaa ja että onko toiminut
+haut tässä tietokannassa.
+
+Kaksi samaa kirjaa
+	SELECT Etunimi, Sukunimi, Nimi, te.idTeos
+	FROM Tekija t 
+	JOIN Tekija_Teos tt ON t.idTekija=tt.idTekija
+	JOIN Teos te ON tt.idTeos=te.idTeos
+	WHERE Etunimi = 'R.A.';
+	+---------+-----------+--------------+--------+
+	| Etunimi | Sukunimi  | Nimi         | idTeos |
+	+---------+-----------+--------------+--------+
+	| R.A.    | Salvatore | Homeland     |      1 |
+	| R.A.    | Salvatore | Exile        |      3 |
+	| R.A.    | Salvatore | Sojourn      |      4 |
+	| R.A.    | Salvatore | Homeland     |      5 |
+	| R.A.    | Salvatore | The Stowaway |      6 |
+	+---------+-----------+--------------+--------+
+
+
+
+Here are some commands to insert data into the tables:
+	INSERT INTO Tekija VALUES(NULL, 'R.A.', 'Salvatore');
+	INSERT INTO Teos VALUES(NULL, "Homeland", "1111-1111-1111-1111");
+Cannot insert two identical books as the ISBN is set to unique. The standard ISBN describes the entries as being unique.
+
+
