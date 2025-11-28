@@ -1,0 +1,96 @@
+This is the final command or whatever subquery or function this is called which I applied to opintoDB database from workbench.
+I added a bit which modifies existing grade if the "gained" grade is higher than the previous although I'm not exactly sure 
+if it should be done that way. I think that every Arviointi should be it's unique entry and if there are multiple from same student 
+for same course, we just pick the highest but this was nice exercize anyway.
+
+CREATE PROCEDURE `LisaaSuoritus`(
+    IN en VARCHAR(45),
+    IN sn VARCHAR(45),
+    IN kk VARCHAR(45),
+    IN arsa TINYINT)
+
+Aliohjelma:BEGIN
+    DECLARE opID INT DEFAULT 0;
+    DECLARE ojID INT DEFAULT 0;
+    DECLARE aID INT DEFAULT 0;
+    DECLARE earsa TINYINT DEFAULT NULL;
+
+    SELECT OpiskelijaID INTO opID 
+    FROM Opiskelija 
+    WHERE Etunimi = en AND Sukunimi = sn;
+
+    IF opID IS NULL OR opID = 0 THEN
+        SELECT 'Opiskelijaa ei löydy';
+        LEAVE Aliohjelma;
+    END IF;
+
+    SELECT OpintojaksoID INTO ojID
+    FROM Opintojakso
+    WHERE koodi = kk;
+
+    IF ojID IS NULL OR ojID = 0 THEN
+        SELECT 'Opintojaksoa ei löydy';
+        LEAVE Aliohjelma;
+    END IF;
+
+    SELECT ArviointiID, Arvosana INTO aID, earsa
+    FROM Arviointi
+    WHERE OpiskelijaID = opID AND OpintojaksoID = ojID
+    LIMIT 1;
+
+    IF aID IS NULL OR aID = 0 THEN
+        IF arsa BETWEEN 0 AND 5 THEN
+            INSERT INTO Arviointi
+            VALUES(NULL, CURDATE(), arsa, opID, ojID);
+        ELSE
+            SELECT 'Arvosana ei ole asteikolla 0-5';
+            LEAVE Aliohjelma;
+        END IF;
+    ELSE
+        IF arsa BETWEEN 0 AND 5 THEN
+            IF arsa > earsa THEN
+                UPDATE Arviointi
+                SET Arvosana = arsa,
+                    Paivamaara = CURDATE()
+                WHERE ArviointiID = aID;
+            ELSE
+                SELECT 'Uusi arvosana ei ole korkeampi — ei päivitetty';
+            END IF;
+        ELSE
+            SELECT 'Arvosana ei ole asteikolla 0-5';
+            LEAVE Aliohjelma;
+        END IF;
+    END IF;
+END
+
+
+
+	CALL LisaaSuoritus('AKU', 'Ankka', 'T20082', 7);
+	+--------------------------------+
+	| Arvosana ei ole asteikolla 0-5 |
+	+--------------------------------+
+	| Arvosana ei ole asteikolla 0-5 |
+	+--------------------------------+
+
+
+	CALL LisaaSuoritus('AKU', 'Ankka', 'T20082', 4);
+	CALL LisaaSuoritus('AKU', 'Ankka', 'T20082', 1);
+	+---------------------------------------------------+
+	| Uusi arvosana ei ole korkeampi — ei päivitetty    |
+	+---------------------------------------------------+
+	| Uusi arvosana ei ole korkeampi — ei päivitetty    |
+	+---------------------------------------------------+
+
+
+	SELECT * FROM Arviointi;
+	+-------------+------------+----------+--------------+---------------+
+	| ArviointiID | Paivamaara | Arvosana | OpiskelijaID | OpintojaksoID |
+	+-------------+------------+----------+--------------+---------------+
+	|           1 | 1998-01-02 |        3 |            1 |             1 |
+	|           2 | 2005-02-12 |        5 |            5 |            11 |
+	|           3 | 2005-02-12 |        5 |            3 |            11 |
+	...
+	|          19 | 2024-03-02 |        3 |            7 |             1 |
+	|          20 | 2024-04-05 |        0 |            4 |             6 |
+	|          21 | 2025-11-28 |        4 |            7 |            14 |
+	+-------------+------------+----------+--------------+---------------+
