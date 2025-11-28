@@ -24,4 +24,7 @@ Here are some commands to insert data into the tables:
 	INSERT INTO Teos VALUES(NULL, "Homeland", "1111-1111-1111-1111");
 Cannot insert two identical books as the ISBN is set to unique. The standard ISBN describes the entries as being unique.
 
+Insert couple entries for Kirja and Asiakas.
+	INSERT INTO Asiakas VALUES(NULL, 'Aku', 'Ankka', 'Paratiisitie 13');
+	INSERT INTO Kirja VALUES (NULL, 3, '84.2');
 
