@@ -1,7 +1,3 @@
-const express = require('express');
-const app = express();
-const port = 3000;
-
 setTimeout(doSomething,2000);
 
 function doSomething(){
